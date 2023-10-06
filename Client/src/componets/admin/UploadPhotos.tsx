@@ -1,3 +1,4 @@
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 
 const FileUpload: React.FC = () => {
@@ -6,7 +7,7 @@ const FileUpload: React.FC = () => {
   useEffect(() => {
     fetch("http://localhost:3000/check-auth", {
       method: "GET",
-      credentials: "include", // Important if you're using sessions or cookies.
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -30,20 +31,29 @@ const FileUpload: React.FC = () => {
       const response = await fetch("http://localhost:3000/upload", {
         method: "POST",
         body: formData,
-        credentials: "include", // ensure cookies/session are sent
+        credentials: "include",
       });
 
       if (!response.ok) {
         const data = await response.json();
         console.error(data.message);
-        // TODO: Handle the error in your UI as needed, e.g., set some state and display an error message.
       } else {
-        // TODO: Handle the successful upload, e.g., show a success message to the user.
       }
     } catch (error) {
-      console.error("Upload error:", error.message);
+      console.error("Upload error:", (error as Error)?.message);
     }
   }
+
+  const LoginApiCall = async () => {
+    try {
+      await axios.get("http://localhost:3000/login");
+    } catch (error) {
+      console.log(
+        "Error in call loginApi",
+        (error as AxiosError)?.response?.data
+      );
+    }
+  };
 
   return (
     <div>
@@ -62,7 +72,7 @@ const FileUpload: React.FC = () => {
       ) : (
         <p>
           You are not authenticated. Please{" "}
-          <a href="http://localhost:3000/login">login</a>.
+          <button onClick={() => LoginApiCall}>login</button>.
         </p>
       )}
     </div>

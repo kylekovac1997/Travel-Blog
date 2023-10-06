@@ -1,34 +1,50 @@
 import { Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { styled } from "styled-components";
+import Login from "../pages/login/Login";
 
 const StyledNavBarContainer = styled(Navbar)`
-  display: flex;
-  justify-content: center;
+  background-color: #faf7f4;
+  font-family: "Cinzel";
 `;
 
 const NavBarStyled = styled.nav`
   display: flex;
-  justify-content: space-between;
-
-  width: 900px;
+  justify-content: space-evenly;
+  width: 50%;
+  margin-left: 70px;
   & a {
-    width: 150px;
-    height: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #5c5c5c;
-    border: 2px solid #5c5c5c;
-    border-radius: 4px;
     &:hover {
       color: #000000;
-      border-color: black;
     }
     &:focus,
     &.active {
       color: #000000;
-      border-color: black;
+    }
+  }
+`;
+
+const SocialMediaContainer = styled.nav`
+  display: flex;
+  justify-content: space-evenly;
+  width: 15%;
+
+  & a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #aca8a8;
+    margin-left: 100px;
+    &:hover {
+      color: #000000;
+    }
+    &:focus,
+    &.active {
+      color: #000000;
     }
   }
 `;
@@ -37,12 +53,29 @@ export const NavigationBar = () => {
   return (
     <StyledNavBarContainer>
       <NavBarStyled>
-        <NavLink to="/Blog">Blog</NavLink>
-        <NavLink to="/Destinations">Destinations</NavLink>
-        <NavLink to="/About">About</NavLink>
-        <NavLink to="/Contact">Contact</NavLink>
-        <NavLink to="/Travel-Essentials">Travel Essentials</NavLink>
+        <NavLink to="/">HOME</NavLink>
+        <NavLink to="/Blog">BLOG</NavLink>
+        <NavLink to="/Destinations">DESTINATIONS</NavLink>
+        <NavLink to="/About">ABOUT</NavLink>
+        <NavLink to="/Contact">CONTACT</NavLink>
       </NavBarStyled>
+      <SocialMediaContainer>
+        <a
+          href="https://twitter.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i className="fab fa-twitter"></i>
+        </a>
+        <a
+          href="https://facebook.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i className="fab fa-facebook-f"></i>
+        </a>
+        <Login />
+      </SocialMediaContainer>
     </StyledNavBarContainer>
   );
 };
