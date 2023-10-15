@@ -30,15 +30,15 @@ const NavBarStyled = styled.nav`
 
 const SocialMediaContainer = styled.nav`
   display: flex;
-  justify-content: space-evenly;
-  width: 15%;
-
+  justify-content: space-between;
+  margin-left: 200px;
+  width: 200px;
   & a {
     display: flex;
     justify-content: center;
     align-items: center;
     color: #aca8a8;
-    margin-left: 100px;
+
     &:hover {
       color: #000000;
     }
