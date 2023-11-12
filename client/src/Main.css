@@ -1,0 +1,11 @@
+#root {
+   background-image: url("https://png.pngtree.com/thumb_back/fh260/background/20201012/pngtree-grey-and-white-clouds-background-image_413281.jpg");
+   background-repeat: no-repeat;
+   background-size: cover;    
+}
+  
+#mainScreen {
+  max-width: 1200px;
+  margin: auto;
+  background-color: white;
+  }
