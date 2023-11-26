@@ -9,6 +9,7 @@ import Footer from "./componets/Footer";
 import About from "./pages/About";
 import HomePage from "./pages/home/HomePage";
 import DestinationsPage from "./pages/destinations/DestinationsPage";
+import CityDestinationPage from "./pages/destinations/CityDestinationPage";
 function App() {
   const location = useLocation();
   return (
@@ -21,7 +22,8 @@ function App() {
         <Route path="Destinations" element={<DestinationsPage/>}/>
         <Route path="About" element={<About />} />
         <Route path="AdminHomePage" element={<AdminHomePage />} />
-        <Route path="/Itenary/:countryName" element={<CountryDetailPage />} />
+        <Route path=":countryName" element={<CountryDetailPage />}/>
+        <Route path=":countryName/:cityName" element={<CityDestinationPage/>}/>
       </Routes>{" "}
       {location.pathname === "/" && (
         <div>

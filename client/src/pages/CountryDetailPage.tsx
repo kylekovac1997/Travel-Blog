@@ -1,45 +1,51 @@
 // CountryDetailPage.tsx
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import GetCountrysVistited from "../componets/apiCall/GetCountrysVistited";
+import { Button } from "@chakra-ui/react";
+import NavigateCountryCityBtn from "../componets/button/NavigateCountryCityBtn";
+
 type CountryDetailsType = {
   country: string,
    city: string, 
-   description: string;
 }
 
 
 const CountryDetailPage: React.FC = () => {
   const { countryName } = useParams();
-const [countryDetails, setCountryDetails] = useState<CountryDetailsType | undefined>(undefined);
-useEffect(() => {
-  const fetchCountryDetails = async () => {
-    try {
-      const details = await GetCountrysVistited(countryName as string);
-      setCountryDetails(details);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [countryDetails, setCountryDetails] = useState<CountryDetailsType[]>([]);
+  const [fecthData, setFetchData] = useState<string>('');
 
-  fetchCountryDetails();
-}, [countryName]);
+  useEffect(() => {
+    const fetchCountryDetails = async () => {
+      setFetchData("loading")
+      try {
+        const countryInformation = await GetCountrysVistited(countryName as string);
+        setCountryDetails(countryInformation);
+        setFetchData("successful")
+      } catch (error) {
+        setFetchData("error")
+        console.log(error);
+      }
+    };
 
-  return (
-    <div>
-      <h2>{countryName}</h2>
-   {countryDetails ? (
-    <div>
-      <p>country: {countryDetails.country}</p>
-      <br/>
-      <p>city: {countryDetails.city}</p>
-      <br/>
-      <p>description: {countryDetails.description}</p>
-    </div>
-   ) : (<div> <p>Havent Travel There Yet</p></div>)} 
-   </div>
-  );
+    fetchCountryDetails();
+  }, [countryName]);
+
+    return (
+      <>
+          {fecthData === "Loading" && <React.Fragment> Loading...</React.Fragment>}
+      {fecthData === "error" && <React.Fragment> Error loading data</React.Fragment>}
+    {fecthData === "successful" && countryDetails.map((countryInfo, index)=>(
+      <div key={index}>  
+        <p>{countryInfo.country}</p>
+        <NavigateCountryCityBtn countryName={countryInfo.country} cityName={countryInfo.city} children={countryInfo.city}/>
+      </div>
+    ))}
+
+
+    </>
+    );
 };
 
 export default CountryDetailPage;

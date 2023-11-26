@@ -1,82 +1,37 @@
-import axios, { AxiosError } from "axios";
-import React, { useEffect, useState } from "react";
+import { useState, ChangeEvent, FormEvent, ReactNode } from "react";
+import { storage } from '../admin/Firebase';
+import { ref, uploadBytes } from "firebase/storage";
 
-const FileUpload: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+function UploadPhotos({countryName, cityName }:{countryName: ReactNode, cityName: ReactNode}) {
+  const [imgUrl, setImgUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetch("http://localhost:3000/check-auth", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsAuthenticated(data.isAuthenticated);
-      });
-  }, []);
-
-  async function handleFileUpload(file?: File) {
-    if (!file) {
-      console.error("No file selected");
-      return;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append("uploadedFile", file);
-
-      const response = await fetch("http://localhost:3000/upload", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        console.error(data.message);
-      } else {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const storageRef = ref(storage, `${countryName}/${cityName}/${file.name}`);
+      
+      try {
+        await uploadBytes(storageRef, file);
+        setImgUrl("Upload successful!"); // or any other message indicating success
+      } catch (error) {
+        alert(error);
       }
-    } catch (error) {
-      console.error("Upload error:", (error as Error)?.message);
-    }
-  }
-
-  const LoginApiCall = async () => {
-    try {
-      await axios.get("http://localhost:3000/login");
-    } catch (error) {
-      console.log(
-        "Error in call loginApi",
-        (error as AxiosError)?.response?.data
-      );
     }
   };
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
-    <div>
-      {isAuthenticated ? (
-        <>
-          <input
-            type="file"
-            onChange={(e) => {
-              if (e.target.files?.length) {
-                handleFileUpload(e.target.files[0]);
-              }
-            }}
-          />
-          <p>Upload a file to OneDrive</p>
-        </>
-      ) : (
-        <p>
-          You are not authenticated. Please{" "}
-          <button onClick={() => LoginApiCall}>login</button>.
-        </p>
-      )}
+    <div className="App">
+      <form onSubmit={handleSubmit} className='form'>
+        <input type='file' onChange={handleFileChange} />
+        <button type='submit'>Upload</button>
+      </form>
+      {imgUrl && <p>{imgUrl}</p>}
     </div>
   );
-};
+}
 
-export default FileUpload;
+export default UploadPhotos;

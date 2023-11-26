@@ -1,24 +1,34 @@
 import { Response, Request } from 'express';
+import { db } from '../../database/Firebase';
+import { query, where, getDocs, collection, DocumentData } from 'firebase/firestore/lite';
 
 export const getDestinations = async (request: Request, response: Response) => {
-    const countryName = request.query.country
-  try {
-    const result = [
-      { country: 'Japan', city: 'Tokyo', description: 'test 1234 test test test test' },
-      { country: 'Mexico', city: 'Tokyo', description: 'test 1234 test test test test' },
-      { country: 'Brazil', city: 'asd', description: 'test 1234 test test test test' }
-    ];
-const founCountry =  result.find(country => country.country === countryName);
+    const foundCountry = request.query.country;
 
-    if(founCountry){
-         console.log(founCountry);
-    return response.status(200).send(founCountry);
-    }else{
-        return response.status(404).send({message: 'not found'})
+    try {
+        if (foundCountry) {
+            // Construct a Firestore query based on the country name
+            const q = query(collection(db, 'Travelled'), where('country', '==', foundCountry));
+
+            // Execute the query
+            const querySnapshot = await getDocs(q);
+
+            // Process the results
+            const destinations: DocumentData[] = [];
+            querySnapshot.forEach((doc) => {
+                // Access data for each document using doc.data()
+                destinations.push(doc.data());
+            });
+
+            console.log(destinations);
+
+            // Handle the array of destinations as needed
+            return response.status(200).send(destinations);
+        } else {
+            return response.status(404).send({ message: 'Country not found' });
+        }
+    } catch (error) {
+        console.error('Error getting destinations:', error);
+        return response.status(500).send({ error: 'Internal Server Error' });
     }
-   
-  } catch (error) {
-    console.log(error);
-    return response.status(500).send({ error: 'Internal Server Error' });
-  }
 };

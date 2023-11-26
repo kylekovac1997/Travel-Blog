@@ -31,7 +31,7 @@ const WorldGlobe = ({backgroundImage}: {backgroundImage: string}) => {
   }, []);
 
   const handleClick = (countryName: string) => {
-    navigate(`/Itenary/${countryName}`);
+    navigate(`${countryName}`);
   };
 
   return (
